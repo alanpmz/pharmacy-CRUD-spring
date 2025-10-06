@@ -6,6 +6,7 @@ import com.alanpmz.pharmacy_CRUD_spring.dto.medicine.MedicineResponseDTO;
 import com.alanpmz.pharmacy_CRUD_spring.service.MedicineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +41,8 @@ public class MedicineController {
 
     @GetMapping("/name/contains")
     public ResponseEntity<List<MedicineResponseDTO>> searchMedicinesByName(
-            @RequestParam String contains) {
-        List<MedicineResponseDTO> medicines = medicineService.findMedicinesByNameContaining(contains);
+            @RequestParam String name) {
+        List<MedicineResponseDTO> medicines = medicineService.findMedicinesByNameContaining(name);
         return ResponseEntity.ok(medicines);
     }
 
@@ -157,20 +158,26 @@ public class MedicineController {
         return ResponseEntity.ok(medicines);
     }
 
-    @GetMapping("/expiry/{expiryDate}")
-    public ResponseEntity<List<MedicineResponseDTO>> findByExpiryDate(@PathVariable OffsetDateTime expiryDate) {
+    @GetMapping("/expiry")
+    public ResponseEntity<List<MedicineResponseDTO>> findByExpiryDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime expiryDate) {
+
         List<MedicineResponseDTO> medicines = medicineService.findByExpiryDate(expiryDate);
         return ResponseEntity.ok(medicines);
     }
 
-    @GetMapping("/expiry/after/{expiryDate}")
-    public ResponseEntity<List<MedicineResponseDTO>> findByExpiryDateAfter(@PathVariable OffsetDateTime expiryDate) {
+    @GetMapping("/expiry/after")
+    public ResponseEntity<List<MedicineResponseDTO>> findByExpiryDateAfter(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime expiryDate) {
+
         List<MedicineResponseDTO> medicines = medicineService.findByExpiryDateAfter(expiryDate);
         return ResponseEntity.ok(medicines);
     }
 
-    @GetMapping("/expiry/before/{expiryDate}")
-    public ResponseEntity<List<MedicineResponseDTO>> findByExpiryDateBefore(@PathVariable OffsetDateTime expiryDate) {
+    @GetMapping("/expiry/before")
+    public ResponseEntity<List<MedicineResponseDTO>> findByExpiryDateBefore(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime expiryDate) {
+
         List<MedicineResponseDTO> medicines = medicineService.findByExpiryDateBefore(expiryDate);
         return ResponseEntity.ok(medicines);
     }

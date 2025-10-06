@@ -72,6 +72,8 @@ cd pharmacy-management
 
 # Start the application
 docker-compose up
+
+Now you can build and run the PharmacyCrudSpringApplication
 ```
 
 ### Access Points
@@ -133,9 +135,9 @@ Database: localhost:3306 (username: root, password: meds)
 - **GET** `/api/medicines/price/less/{price}`
 
 ### **Search by Expiry Date**
-- **GET** `/api/medicines/expiry/{expiryDate}`
-- **GET** `/api/medicines/expiry/after/{expiryDate}`
-- **GET** `/api/medicines/expiry/before/{expiryDate}`
+- **GET** `/api/medicines/expiry?expiryDate={expiryDate}`
+- **GET** `/api/medicines/expiry/after?expiryDate={expiryDate}`
+- **GET** `/api/medicines/expiry/before?expiryDate={expiryDate}`
 - **GET** `/api/medicines/expired`
 
 ### **Business Operations**

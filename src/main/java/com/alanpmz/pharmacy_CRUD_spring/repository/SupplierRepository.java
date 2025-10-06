@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
+    boolean existsByName(String name);
     Optional<Supplier> findByName(String name);
     List<Supplier> findByNameContainingIgnoreCase(String name);
     List<Supplier> findByNameStartingWithIgnoreCase(String name);

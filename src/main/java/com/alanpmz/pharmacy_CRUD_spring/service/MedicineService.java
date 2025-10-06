@@ -255,8 +255,11 @@ public class MedicineService {
     }
 
     public MedicineResponseDTO updateStock(Long id, Integer newQuantity) {
+        if (newQuantity == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity is required");
+        }
         if (newQuantity < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity name cannot be negative");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be negative");
         }
 
         Medicine medicine = medicineRepository.findById(id)

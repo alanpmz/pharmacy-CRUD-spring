@@ -5,6 +5,7 @@ import com.alanpmz.pharmacy_CRUD_spring.dto.supplier.SupplierCreateDTO;
 import com.alanpmz.pharmacy_CRUD_spring.dto.supplier.SupplierUpdateDTO;
 import com.alanpmz.pharmacy_CRUD_spring.model.Supplier;
 import com.alanpmz.pharmacy_CRUD_spring.repository.SupplierRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,10 @@ public class SupplierService {
 
 
     public SupplierResponseDTO createSupplier(SupplierCreateDTO dto) {
+        if (supplierRepository.existsByName(dto.name())){
+            throw new EntityExistsException("Supplier with same name already exists");
+        }
+
         Supplier supplier = Supplier.builder()
                 .name(dto.name())
                 .build();

@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
                 .filter(Objects::nonNull)
                 .toList();
 
-        String errorMessage = errors.isEmpty() ? "Validation failed" : errors.getFirst();
+        String errorMessage = errors.isEmpty() ? "Validation failed" : errors.get(0);
         ErrorResponse error = new ErrorResponse("VALIDATION_ERROR", errorMessage);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
