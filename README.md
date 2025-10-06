@@ -68,12 +68,12 @@ MySQL Database<br>
 ```bash
 # Clone the repository
 git clone https://github.com/alanpmz/pharmacy-crud-spring.git
-cd pharmacy-management
+
+# Open the repository folder 
+cd pharmacy-crud-spring
 
 # Start the application
 docker-compose up
-
-Now you can build and run the PharmacyCrudSpringApplication
 ```
 
 ### Access Points

@@ -1,4 +1,16 @@
 services:
+  backend:
+    build: .
+    container_name: pharmacy-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - pharmacy-network
+
   db:
     image: mysql:8.0
     container_name: pharmacy-db
@@ -10,6 +22,12 @@ services:
     volumes:
       - pharmacy-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - pharmacy-network
 
 volumes:
   pharmacy-data:
+
+networks:
+  pharmacy-network:
+    driver: bridge
