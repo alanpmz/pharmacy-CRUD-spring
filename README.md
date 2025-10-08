@@ -62,7 +62,7 @@ MySQL Database<br>
 This project uses JWTs signed with RSA keys. For maximum ease of use, a non-sensitive key pair is automatically generated inside the Docker container at startup using the included generate_keys.sh script.
 
 ### THESE RANDOMLY GENERATED KEYS MUST NEVER BE USED IN PRODUCTION.
-For a full security policy and details on production deployment best practices, please consult the dedicated [SECURITY.MD](security.md) file.
+For a full security policy and details on production deployment best practices, please consult the dedicated [SECURITY.MD](SECURITY.md) file.
 
 ## Quick Start with Docker
 
