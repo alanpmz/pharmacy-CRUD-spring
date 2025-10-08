@@ -58,6 +58,12 @@ JPA Entities (Domain Model)<br>
 ↓<br>
 MySQL Database<br>
 
+## ⚠️ SECURITY WARNING: Development Keys (AUTOMATICALLY GENERATED)
+This project uses JWTs signed with RSA keys. For maximum ease of use, a non-sensitive key pair is automatically generated inside the Docker container at startup using the included generate_keys.sh script.
+
+### THESE RANDOMLY GENERATED KEYS MUST NEVER BE USED IN PRODUCTION.
+For a full security policy and details on production deployment best practices, please consult the dedicated [SECURITY.MD](security.md) file.
+
 ## Quick Start with Docker
 
 ### Prerequisites
@@ -67,13 +73,14 @@ MySQL Database<br>
 ### Setup
 ```bash
 # Clone the repository
-git clone https://github.com/alanpmz/pharmacy-crud-spring.git
+git clone [https://github.com/alanpmz/pharmacy-crud-spring.git](https://github.com/alanpmz/pharmacy-crud-spring.git)
 
 # Open the repository folder 
 cd pharmacy-crud-spring
 
-# Start the application
-docker-compose up
+# Build and start the application. 
+# The Docker container will automatically generate the required JWT keys on first run.
+docker-compose up --build
 ```
 
 ### Access Points
@@ -83,63 +90,75 @@ Database: localhost:3306 (username: root, password: meds)
 
 ---
 
-# API Endpoints Reference
 
-## Supplier Endpoints
+## API Endpoints Full Reference
 
-### **CRUD Operations**
-- **POST** `/api/suppliers`
-- **GET** `/api/suppliers`
-- **GET** `/api/suppliers/{id}`
-- **PUT** `/api/suppliers/{id}`
-- **DELETE** `/api/suppliers/{id}`
+### 1. Authentication Endpoints
 
-### **Search Operations**
-- **GET** `/api/suppliers/name/{name}`
-- **GET** `/api/suppliers/name/contains?name={name}`
-- **GET** `/api/suppliers/name/prefix?prefix={prefix}`
+| Method | Endpoint | Description | Requires Scope | 
+| ----- | ----- | ----- | ----- | 
+| **POST** | `/api/users/register` | Creates a new user with the `USER` role. | `permitAll` | 
+| **POST** | `/api/users/login` | Authenticates a user and returns a JWT access token. | `permitAll` | 
+| **GET** | `/api/users` | Lists all users. | `admin` | 
 
----
+### 2. Supplier Endpoints
 
-##  Medicine Endpoints
+| Method | Endpoint | Description | Requires Scope | 
+| ----- | ----- | ----- | ----- | 
+| **POST** | `/api/suppliers` | Creates a new supplier. | `admin` | 
+| **GET** | `/api/suppliers` | Lists all suppliers. | `authenticated` | 
+| **GET** | `/api/suppliers/{id}` | Retrieves a supplier by ID. | `authenticated` | 
+| **PUT** | `/api/suppliers/{id}` | Updates an existing supplier. | `admin` | 
+| **DELETE** | `/api/suppliers/{id}` | Deletes a supplier. | `admin` | 
+| **GET** | `/api/suppliers/name/{name}` | Finds suppliers by exact name match. | `authenticated` | 
+| **GET** | `/api/suppliers/name/contains?name={name}` | Finds suppliers whose name contains the search string. | `authenticated` | 
+| **GET** | `/api/suppliers/name/prefix?prefix={prefix}` | Finds suppliers whose name starts with the given prefix. | `authenticated` | 
 
-### **CRUD Operations**
-- **POST** `/api/medicines`
-- **GET** `/api/medicines`
-- **GET** `/api/medicines/{id}`
-- **PATCH** `/api/medicines/{id}`
-- **DELETE** `/api/medicines/{id}`
+### 3. Medicine Endpoints
 
-### **Search by Name**
-- **GET** `/api/medicines/name/{name}`
-- **GET** `/api/medicines/name/contains?name={name}`
-- **GET** `/api/medicines/name/prefix?prefix={prefix}`
-- **GET** `/api/medicines/name/{name}/form/{dosageForm}`
-- **GET** `/api/medicines/name/form?name={name}&dosageForm={dosageForm}`
+#### CRUD and Stock Operations
 
-### **Search by Dosage**
-- **GET** `/api/medicines/dosage/form/{dosageForm}`
-- **GET** `/api/medicines/dosage/{dosage}`
-- **GET** `/api/medicines/dosage/greater/{dosage}`
-- **GET** `/api/medicines/dosage/less/{dosage}`
-- **GET** `/api/medicines/dosage/form/{dosageForm}/dosage/{dosage}`
+| Method | Endpoint | Description | Requires Scope | 
+| ----- | ----- | ----- | ----- | 
+| **POST** | `/api/medicines` | Creates a new medicine. | `admin` | 
+| **GET** | `/api/medicines` | Lists all medicines. | `authenticated` | 
+| **GET** | `/api/medicines/{id}` | Retrieves a medicine by ID. | `authenticated` | 
+| **PATCH** | `/api/medicines/{id}` | Partially updates a medicine. | `admin` | 
+| **DELETE** | `/api/medicines/{id}` | Deletes a medicine. | `admin` | 
+| **PATCH** | `/api/medicines/{id}/stock?quantity={quantity}` | Updates the stock quantity. | `admin` | 
+| **GET** | `/api/medicines/supplier/{supplierId}` | Finds all medicines supplied by a specific supplier ID. | `authenticated` | 
 
-### **Search by Quantity**
-- **GET** `/api/medicines/quantity/{quantity}`
-- **GET** `/api/medicines/quantity/greater/{quantity}`
-- **GET** `/api/medicines/quantity/less/{quantity}`
+#### Search by Name & Form
 
-### **Search by Price**
-- **GET** `/api/medicines/price/{price}`
-- **GET** `/api/medicines/price/greater/{price}`
-- **GET** `/api/medicines/price/less/{price}`
+| Method | Endpoint | Description | Requires Scope | 
+| ----- | ----- | ----- | ----- | 
+| **GET** | `/api/medicines/name/{name}` | Finds medicines by exact name match. | `authenticated` | 
+| **GET** | `/api/medicines/name/contains?name={name}` | Finds medicines whose name contains the search string. | `authenticated` | 
+| **GET** | `/api/medicines/name/prefix?prefix={prefix}` | Finds medicines whose name starts with the given prefix. | `authenticated` | 
+| **GET** | `/api/medicines/name/{name}/form/{dosageForm}` | Finds medicines by exact name and dosage form match. | `authenticated` | 
+| **GET** | `/api/medicines/name/form?name={name}&dosageForm={dosageForm}` | Finds medicines by name and dosage form. | `authenticated` | 
+| **GET** | `/api/medicines/dosage/form/{dosageForm}` | Finds medicines by exact dosage form. | `authenticated` | 
 
-### **Search by Expiry Date**
-- **GET** `/api/medicines/expiry?expiryDate={expiryDate}`
-- **GET** `/api/medicines/expiry/after?expiryDate={expiryDate}`
-- **GET** `/api/medicines/expiry/before?expiryDate={expiryDate}`
-- **GET** `/api/medicines/expired`
+#### Search by Dosage & Quantity
 
-### **Business Operations**
-- **PATCH** `/api/medicines/{id}/stock?quantity={quantity}`
-- **GET** `/api/medicines/supplier/{supplierId}`
+| Method | Endpoint | Description | Requires Scope | 
+| ----- | ----- | ----- | ----- | 
+| **GET** | `/api/medicines/dosage/{dosage}` | Finds medicines by exact dosage value. | `authenticated` | 
+| **GET** | `/api/medicines/dosage/greater/{dosage}` | Finds medicines with dosage greater than the specified value. | `authenticated` | 
+| **GET** | `/api/medicines/dosage/less/{dosage}` | Finds medicines with dosage less than the specified value. | `authenticated` | 
+| **GET** | `/api/medicines/dosage/form/{dosageForm}/dosage/{dosage}` | Finds medicines by dosage form AND exact dosage value. | `authenticated` | 
+| **GET** | `/api/medicines/quantity/{quantity}` | Finds medicines with exact stock quantity. | `authenticated` | 
+| **GET** | `/api/medicines/quantity/greater/{quantity}` | Finds medicines with stock quantity greater than the specified value. | `authenticated` | 
+| **GET** | `/api/medicines/quantity/less/{quantity}` | Finds medicines with stock quantity less than the specified value. | `authenticated` | 
+
+#### Search by Price & Expiry Date
+
+| Method | Endpoint | Description                                                                           | Requires Scope | 
+| ----- | ----- |---------------------------------------------------------------------------------------| ----- | 
+| **GET** | `/api/medicines/price/{price}` | Finds medicines with exact price.                                                     | `authenticated` | 
+| **GET** | `/api/medicines/price/greater/{price}` | Finds medicines with price greater than the specified value.                          | `authenticated` | 
+| **GET** | `/api/medicines/price/less/{price}` | Finds medicines with price less than the specified value.                             | `authenticated` | 
+| **GET** | `/api/medicines/expired` | Finds all medicines that have already expired.                                        | `authenticated` | 
+| **GET** | `/api/medicines/expiry?expiryDate={expiryDate}` | Finds medicines expiring on a specific date `(Format example: 2023-10-05T14:30+02:00)`. | `authenticated` | 
+| **GET** | `/api/medicines/expiry/after?expiryDate={expiryDate}` | Finds medicines expiring after the specified date.                                    | `authenticated` | 
+| **GET** | `/api/medicines/expiry/before?expiryDate={expiryDate}` | Finds medicines expiring before the specified date.                                   | `authenticated` |

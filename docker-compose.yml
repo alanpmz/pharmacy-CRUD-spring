@@ -5,7 +5,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
@@ -24,6 +25,12 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - pharmacy-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pmeds"]
+      timeout: 5s
+      retries: 30
+      interval: 5s
+      start_period: 30s
 
 volumes:
   pharmacy-data:

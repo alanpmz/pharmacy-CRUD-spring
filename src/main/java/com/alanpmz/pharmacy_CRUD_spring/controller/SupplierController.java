@@ -39,8 +39,8 @@ public class SupplierController {
 
     @GetMapping("/name/contains")
     public ResponseEntity<List<SupplierResponseDTO>> searchSuppliersByName(
-            @RequestParam String contains) {
-        List<SupplierResponseDTO> suppliers = supplierService.findSuppliersByNameContaining(contains);
+            @RequestParam String name) {
+        List<SupplierResponseDTO> suppliers = supplierService.findSuppliersByNameContaining(name);
         return ResponseEntity.ok(suppliers);
     }
 
